@@ -1,0 +1,51 @@
+{
+  "name": "adinfo-vue",
+  "version": "1.0.1",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "ckeditor4-vue": "^1.4.0",
+    "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "jquery": "^3.6.0",
+    "k-progress": "^1.5.0",
+    "vue": "^2.6.11",
+    "vue-axios": "^3.4.0",
+    "vue-multiple-progress": "^1.6.0",
+    "vue-router": "^3.2.0",
+    "vue-simple-progress": "^1.1.1",
+    "vuejs-progress-bar": "^1.2.7",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^2.2.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "description": "애드인포 개발 진행\r =================\r ```\r 신규등록/오류수정/기능개선/기능추가/기능제거/업무추가/업무삭제/업무개선/소스제거\r ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adinfo-proj/adinfoVue.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adinfo-proj/adinfoVue/issues"
+  },
+  "homepage": "https://github.com/adinfo-proj/adinfoVue#readme"
+}
