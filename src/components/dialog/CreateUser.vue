@@ -43,19 +43,19 @@
         <br>
         조문체계도버튼연혁<br>
         제1조(목적) 이 법은 개인정보의 처리 및 보호에 관한 사항을 정함으로써 개인의 자유와 권리를 보호하고, 나아가 개인의 존엄과 가치를 구현함을 목적으로 한다.  개정 2014. 3. 24.><br>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab ex ducimus aliquid minus mollitia. Et, incidunt nulla sint aliquam, beatae ullam eum mollitia unde quo iste quibusdam voluptatibus velit corporis. Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis adipisci quaerat, earum optio quia numquam voluptatum nisi eaque sunt amet labore molestiae, mollitia nihil fugiat minus in rerum consequuntur rem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus ducimus id rem magni, blanditiis dolorem eum nemo harum, sapiente laudantium? Nesciunt inventore illum voluptatem esse, possimus aliquid quaerat vel. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam consectetur eveniet asperiores dolorem reiciendis omnis iure, a dolore distinctio, aperiam voluptas, quis fugit autem cum ipsam. Facere perferendis temporibus provident. Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore dolor provident at quos vitae architecto iure inventore perspiciatis, aut magnam, praesentium, fugit quas suscipit iusto quia alias qui consectetur necessitatibus?
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab ex ducimus aliquid minus mollitia. 
 
 
       </p>
     </div>
     <div class="radioBox">
-      <input type="radio" name="termsYn" id="termsY"><label for="termsY" >동의합니다.</label> 
+      <input type="radio" name="termsYn" id="termsY"><label for="termsY">동의합니다.</label> 
       <input type="radio" name="termsYn" id="termsN"><label for="termsN">동의하지 않습니다.</label>
     </div>
     <h3> 개인정보취급방침</h3>
     <div class="termsBox">
       <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis sint, reprehenderit suscipit ratione, aperiam ipsam vel consequatur similique dolorem, vero nesciunt! Ad natus ab illum, deserunt blanditiis quas quos sint?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime quidem modi, dignissimos ipsa assumenda dolor unde ab veritatis, ad expedita enim quae! Consectetur delectus animi quod numquam harum quibusdam rerum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat quis iste voluptatibus perferendis laborum illum ipsam quas? Unde aliquam qui pariatur voluptatum, nisi incidunt laboriosam maxime ipsa possimus reiciendis saepe. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem aliquam ab perspiciatis, quidem necessitatibus earum. Rem beatae quasi voluptates minus eaque neque non, iusto, animi cum similique nihil, recusandae tenetur. Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus quam exercitationem doloremque quo vitae architecto blanditiis quod laboriosam non harum magnam fugit possimus libero voluptatum accusantium et, eius aspernatur unde! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Itaque totam debitis culpa! Cupiditate architecto ea corporis molestiae culpa voluptatem quo et, exercitationem tempore ipsam odit aut nostrum praesentium nemo ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore eum repudiandae culpa labore? Officia delectus aut laborum illo, nobis doloremque a placeat, deleniti, veniam omnis nam libero corporis! Praesentium, hic. Lorem ipsum dolor sit amet consectetur adipisicing elit. At harum tempora voluptatem blanditiis accusantium? Debitis odit impedit maxime expedita quidem illo, quis ea architecto voluptas quia numquam quae eos. Quibusdam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati temporibus alias voluptatibus natus. Explicabo vitae voluptas magnam, in illum et, adipisci ad quia nobis optio modi dolores? Tempora, iusto dolore?
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
       </p>
     </div>
     <div class="radioBox">
@@ -68,17 +68,36 @@
         <tr>
           <th>이메일(아이디)</th>
           <td class="tableWi">
-            <input type="text" placeholder="abc@abd.co.kr">
+            <input type="text">
+            @
+            <input type="text">
+            <select name="mailDomain" id="mailDomain">
+              <option value="1">직접입력</option>
+              <option value="naver.com">naver.com</option>
+              <option value="daum.net">daum.net</option>
+              <option value="hanmail.net">hanmail.net</option>
+              <option value="hotmail.com">hotmail.com</option>
+              <option value="nate.com">nate.com</option>
+              <option value="yahoo.co.kr">yahoo.co.     kr</option>
+              <option value="paran.com">paran.com</option>
+              <option value="empas.com">empas.com</option>
+              <option value="dreamwiz.com">dreamwiz.com</option>
+              <option value="freechal.com">freechal.com</option>
+              <option value="lycos.co.kr">lycos.co.kr</option>
+              <option value="korea.com">korea.com</option>
+              <option value="gmail.com">gmail.com</option>
+              <option value="hanmir.com">hanmir.com</option>
+            </select>  
           </td>
           <th>이름/회사명</th>
           <td>
-            <input type="text" class="wMax">
+            <input type="text" class="wMax" v-model="emailId">
           </td>
         </tr>
         <tr>
           <th>비밀번호</th>
           <td colspan="3">
-            <input type="password" name="userPw" id="userPw">
+            <input type="password" name="userPw" id="userPw" v-model="emailPw">
             <label for="userPw">* 영문 / 숫자 (특수문자 ~!@#$%^-* 만 사용 가능)를 조합하여 최소 8자 이상 13자 이내</label>
           </td>
         </tr>
@@ -115,11 +134,17 @@
 </template>
 
 <script>
+  import axios from 'axios';
   import $ from 'jquery';
   
   export default {
     data() {
-
+      return {
+          emailId: ''
+        , emailPw: ''
+        , userName: ''
+        , clntSubsNo: ''        
+      }
     },
     methods: {
       //******************************************************************************
@@ -127,19 +152,56 @@
       //******************************************************************************
       SignMadalCancle() {
         $("#singPopUp").css({display: "none"})
-      }
+      },
+
       //******************************************************************************
       // 회원가입 데이터 전송함수
       //******************************************************************************
-      , SignPost() {
-        // axios.post()
+      SignPost() {
 
 
-        alert("회원가입이 완료되었습니다.")
-        $("#singPopUp").css({display: "none"})
+      //------------------------------------------------------------------------------
+      // 정보 보내기
+      //------------------------------------------------------------------------------
+      var data = {
+          emailId: 'kellyis@daum.net'
+        , userPass: 'test'
+        , userName: '박형준'
+        , clntSubsNo: '01024068222'
+        , adGradeCd: '02'
+      };
 
+      const frm = new FormData();
+      frm.append("dataObj", new Blob([JSON.stringify(data)] , {type: "application/json"}));		
+
+      axios.post("http://api.adinfo.co.kr:30000/addmember", frm)
+        .then(response => {
+
+          console.log(response);
+
+          if( response.data.status == true ) {
+            $("#singPopUp").css({display: "none"})
+
+            this.loginView = false;
+            this.$store.state.emailId = response.data.emailId
+            this.$store.state.jwtAuthToken = response.data.jwtAuthToken
+            this.$store.state.adGradeCd = response.data.adGradeCd
+
+            // 토큰값을 LocalStorage에 저장한다.
+            localStorage.setItem("email", this.$store.state.emailId);
+            localStorage.setItem("token", this.$store.state.jwtAuthToken);
+            localStorage.setItem("grade", this.$store.state.adGradeCd);
+
+            this.$router.push({ path : "MENU_0000" })
+          } else {
+            alert(response.data.message)
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
       }
-    } 
+    }
   }
 </script>
 
@@ -293,6 +355,11 @@
     padding: 6px 10px;
     border: solid 1px #e5e5e5;
     width: 270px;
+  }
+
+  #singPopUp table .tableWi input[type="text"],
+  #singPopUp table .tableWi select {
+    width: 108px;
   }
 
   #singPopUp table td input[type="text"] {

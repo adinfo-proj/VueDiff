@@ -41,18 +41,13 @@
     </div>
     <CreateUser></CreateUser>
     <SearchUser></SearchUser>
-    
-  
-
-
-
   </div>
 </template>
 
 <script>
 
-import axios from "axios";
 import $ from 'jquery';
+import axios from "axios";
 import CreateUser from "../../components/dialog/CreateUser"
 import SearchUser from "../../components/dialog/SearchUser"
 

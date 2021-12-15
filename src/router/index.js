@@ -19,6 +19,11 @@ import MENU_0302 from "../views/agency/MENU_0303.vue";
 import MENU_0303 from "../views/agency/MENU_0302.vue";
 import TEST_etc from "../views/agency/TEST_etc.vue";
 
+// import MENU_0205 from "../views/agency/MENU_0205.vue";
+// import MENU_0205 from "../views/agency/MENU_0205.vue";
+// import MENU_0205 from "../views/agency/MENU_0205.vue";
+// import MENU_0205 from "../views/agency/MENU_0205.vue";
+
 
 Vue.use(VueRouter);
 
@@ -129,9 +134,9 @@ const routes = [ // 권한에 상관없이 모두 추가할 것, 추후 권한�
 ];
 
 const router = new VueRouter({
-  //  mode: "history",
-    base: process.env.BASE_URL,
-    routes,
+//  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
