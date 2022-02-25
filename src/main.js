@@ -9,8 +9,15 @@ import DateCalc from "./plugins/DateCalc"
 Vue.use(DateCalc)
 
 // ckeditor
-import CKEditor from 'ckeditor4-vue';
+import CKEditor from 'ckeditor4full-vue';
 Vue.use( CKEditor );
+
+//
+import ChooseLandImg from './components/dialog/ChooseLandImg.vue';
+Vue.use( ChooseLandImg );
+
+//import SendSms from 'solapi'
+//Vue.use( SendSms );
 
 Vue.config.productionTip = false;
 

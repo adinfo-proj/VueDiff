@@ -1,7 +1,6 @@
 <template>
   <div class="container"> 
-    <!-- 1400*1140 -->
-    <div class="tap" > <!-- 추후 각 a태그 별 변수 지정-->
+    <div class="tap" > <!-- 추후 input:radio로 변경 예정-->
       <a class="cpa on" href="javascript:void(0)"><img src="../../assets/images/icon01.png" alt="icon01">CPA광고</a> 
       <a class="cps" href="javascript:void(0)"><img src="../../assets/images/icon02.png" alt="icon02">CPS광고 <img src="../../assets/images/readyIcon.png" alt="readyIcon" class="readyIcon"></a>
       <a class="cpp" href="javascript:void(0)"><img src="../../assets/images/icon03.png" alt="icon03">CPP광고 <img src="../../assets/images/readyIcon.png" alt="readyIcon" class="readyIcon"></a>
@@ -106,56 +105,38 @@
           </div>
         </div>
       </div>
-
-
-
       <div class="chooseArea">
-        <p>광고지역 설정<span>(중복 선택 가능)</span></p>
-
+        <p>광고지역 설정<span>(최대 10개 선택 가능)</span></p>
         <span class="chooseAreaDeta"
           v-for="(adIndex, index) in this.$store.state.addAreaListObj"
           :key="index"
           :value="adIndex.subCode"
         >{{ adIndex.codeNm }} {{ adIndex.codeDescr }}</span>
-        
-
-
         <!-- 다시 작성 할 부분 -->
         <div class="chooseBtn">
           <button @click="AddArea();">설정하기 <i class="fas fa-plus"></i></button>
         </div>
       </div>
-
-
-
       <div class="chooseExcept">
-        <p>광고제외지역 설정</p>
+        <p>광고제외지역 설정<span>(최대 10개 선택 가능)</span></p>
         <span class="chooseAreaDeta"
           v-for="(adIndex, index) in this.$store.state.removeAreaListObj"
           :key="index"
           :value="adIndex.subCode"
         >{{ adIndex.codeNm }} {{ adIndex.codeDescr }}</span>
-
-
         <div class="chooseBtn">
           <button @click="RemoveArea();">설정하기 <i class="fas fa-plus"></i></button>
         </div>
       </div>
-
-
-
     </div>
-
-
-
     <div class="campaign tableBox">
       <table>
         <tr>
-          <th>캠페인 명<span class="necItem"> (필수)</span></th>
+          <th>캠페인 명<span class="necItem"> *</span></th>
           <td><input type="text" class="camName" v-model="adName" autofocus></td>
         </tr>
         <tr>
-          <th>캠페인 배너<span class="necItem"> (필수)</span></th>
+          <th>캠페인 배너<span class="necItem"> *</span></th>
           <td>
             <input class="upload_name" id="bannerName"  disabled="disabled" v-bind:placeholder="adBannerName">
             <label for="bannerUpload">이미지 등록하기 <i class="fas fa-plus"></i></label>
@@ -163,7 +144,7 @@
           </td>
         </tr>
         <tr class="notice">
-          <th>캠페인 내용<span class="necItem"> (필수)</span></th>
+          <th>캠페인 내용<span class="necItem"> *</span></th>
           <td>
             <ckeditor id="camContents" v-model="adComment" :config="editorConfig"></ckeditor>
           </td>
@@ -178,13 +159,13 @@
     <div class="promotion tableBox">
       <table>
         <tr>
-          <td class="tableHead">캠페인 단가<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">캠페인 단가<span class="necItem"> *</span></td>
           <td><input type="text" name="" id="" v-model="adPrice"></td>
           <td class="tableHead">캠페인 프로모션 단가</td>
           <td><input type="text" name="" id="" v-model="adPromotionPrice"></td>
         </tr>
         <tr>
-          <td class="tableHead">DB 진행 수량<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">DB 진행 수량<span class="necItem"> *</span></td>
           <td><input type="text" name="" id="" v-model="adMinQty" placeholder="최소 수량 100건 이상"></td>
           <td class="tableHead">승인률</td>
           <td><input type="text" name="" id="" v-model="approval" placeholder="최저 승인율 50%입니다"></td>
@@ -192,11 +173,14 @@
         <tr>
           <td class="tableHead">일별 DB 접수 제한</td>
           <td><input type="text" name="" id="" v-model="dayLimit"></td>
-          <td class="tableHead">연령 타겟<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">연령 타겟<span class="necItem"> *</span></td>
           <td>
-            <input type="radio" name="tagetAge" id="tagetAgeY" v-model="ageTarget" value="ageN"><label for="tagetAgeY">나이제한 없음</label>
-            <input type="radio" name="tagetAge" id="tagetAgeN" v-model="ageTarget" value="ageY"><label for="tagetAgeN">나이제한 있음</label>
-            <input type="text" name="tagetAge" class="tagetAge" id="fromAge" v-model="ageTargetFrom"><span class="ageIcon">~</span>
+            <input type="radio" name="tagetAge" id="tagetAgeY" v-model="ageTarget" value="N">
+            <label for="tagetAgeY">나이제한 없음</label>
+            <input type="radio" name="tagetAge" id="tagetAgeN" v-model="ageTarget" value="Y">
+            <label for="tagetAgeN">나이제한 있음</label>
+            <input type="text" name="tagetAge" class="tagetAge" id="fromAge" v-model="ageTargetFrom">
+            <span class="ageIcon">~</span>
             <input type="text" name="tagetAge" class="tagetAge" id="toAge" v-model="ageTargetTo">
           </td>
         </tr>
@@ -205,12 +189,12 @@
           <td colspan="3"><input type="text" name="" id="" v-model="reqWordCond"></td>
         </tr>
         <tr>
-          <td class="tableHead">진행(선호) 채널<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">진행(선호) 채널<span class="necItem"> *</span></td>
           <td colspan="3" class="chooseCheck">
-            <div class="checkingBox"
-            @click="BanExChannelAll()">
+            <div class="checkingBox">
               <input type="checkbox" id="prohibitAll"
               :checked="banExChannelAll"
+              @click="BanExChannelAll()"
               >
               <label for="prohibitAll">전체</label>
             </div>
@@ -227,7 +211,7 @@
           </td>
         </tr>
         <tr>
-          <td class="tableHead">금지 채널<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">금지 채널<span class="necItem"> *</span></td>
           <td colspan="3" class="chooseCheck">
             <div class="checkingBox"
               v-for="(banChannel, index) in banChannelObj"
@@ -252,7 +236,7 @@
         </tr>
         <tr>
           <!-- 무효조건 관련-->
-          <td class="tableHead">무효 조건<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">무효 조건<span class="necItem"> *</span></td>
           <td colspan="3">
             <div class="checkingBox nullify"
               v-for="(nullifyCond, index) in nullifyCondObj"
@@ -269,7 +253,7 @@
           </td>
         </tr>
         <tr>
-          <td class="tableHead">취소 조건<span class="necItem"> (필수)</span></td>
+          <td class="tableHead">취소 조건<span class="necItem"> *</span></td>
           <td colspan="3">
             <div class="checkingBox cancelBox"
               v-for="(cancelCond, index) in cancelCondObj"
@@ -289,20 +273,21 @@
           <td class="tableHead">SMS 수신 여부</td>
           <td>
             DB접수 시 SMS를 수신합니다. 
-            <input type="radio" name="sms" id="smsY" v-model="smsYn" value="smsY"><label for="smsY">예</label>
+            <input type="radio" name="sms" id="smsY" v-model="smsYn" value="Y"><label for="smsY">예</label>
             <input type="tel" id="phoneNum" placeholder="연락처를 입력해주세요." maxlength="11" v-model="smsNo">
-            <input type="radio" name="sms" id="smsN" v-model="smsYn" value="smsYN" checked><label for="smsN">아니오</label> 
+            <input type="radio" name="sms" id="smsN" v-model="smsYn" value="N" checked><label for="smsN">아니오</label> 
           </td>
           <td class="tableHead">자동화 확정 일수</td>
           <td>
-            <input type="radio" name="confirmDate" id="date7" v-model="autoConfirm" value="day7"><label for="date7">7일</label>
-            <input type="radio" name="confirmDate" id="date15" v-model="autoConfirm" value="day15"><label for="date15">15일</label>
-            <input type="radio" name="confirmDate" id="dateEtc" v-model="autoConfirm" value="dayEtc"><label for="dateEtc">기타(협의 필요)</label><input type="text" name="" id="dateEtc2" >
+            <input type="radio" name="confirmDate" id="date7" v-model="autoConfirm" value="07"><label for="date7">7일</label>
+            <input type="radio" name="confirmDate" id="date15" v-model="autoConfirm" value="15"><label for="date15">15일</label>
+            <input type="radio" name="confirmDate" id="dateEtc" v-model="autoConfirm" value="99"><label for="dateEtc">기타(협의 필요)</label><input type="text" name="" id="dateEtc2" >
           </td>
         </tr>
         <tr>
           <td class="tableHead">기타</td>
             <td colspan="3"><input type="text" name="" id=""></td>
+
         </tr>
       </table>
     </div>
@@ -321,8 +306,8 @@
         <tr class="lendOwn" v-if="lendSelect == 0">
           <td class="tableHead">외부입력 폼 제공</td>
           <td>
-            <input type="radio" name="extForm" id="extFormY" v-model="extFormYn" value="extFormY"><label for="">예</label>
-            <input type="radio" name="extForm" id="extFormN" v-model="extFormYn" value="extFormN"><label for="">아니오</label>
+            <input type="radio" name="extForm" id="extFormY" v-model="extFormYn" value="Y"><label for="">예</label>
+            <input type="radio" name="extForm" id="extFormN" v-model="extFormYn" value="N"><label for="">아니오</label>
           </td>
           <td class="gideBtn">
             <button id="popUP01">픽셀,스크립트 설치 가이드 보기</button>
@@ -437,14 +422,14 @@ export default {
       adComment: '',          // 캠페인 내용
 
       adUsp: '',              // 광고 이벤트설정
-      smsYn: 'smsYN',             // DB 접수 시 SMS 수신 여부 Y
+      smsYn: 'N',             // DB 접수 시 SMS 수신 여부 Y
       smsNo: '',              // DB 접수 시 SMS 수신 여부
       adPrice: '',            // 캠페인 단가
       adPromotionPrice: '0',   // 캠페인 프로모션 단가
       adMinQty: '',           // 캠페인 최소 수량
       dayLimit: '',           // 일별 DB 접수 제한 건수
       approval: '',           // 승인률
-      ageTarget: 'ageN',      // 연령 타겟 {from:"", to: ""}
+      ageTarget: 'N',      // 연령 타겟 {from:"", to: ""}
       ageTargetFrom: '',      // from
       ageTargetTo: '',        // to
       reqWordCond: '',        // 필수 키워드
@@ -460,24 +445,17 @@ export default {
       nullifyCondObj:'',      // 무효조건 객체
       cancelCond: '',         // 취소조건
       cancelCondObj: '',      // 취소조건 객체
-      autoConfirm: 'day7',    // 자동확정일수
-      cpaYn: 'cpaN',
+      autoConfirm: '07',    // 자동확정일수
+      cpaYn: 'N',
 
 
       landingPageTitle: '',   // DB 접수 시 SMS 수신 번호
       landingUrl: '',         // 캠페인 단가
 
-      extFormYn:'extFormN',   // 랜딩페이지 보유여부
+      extFormYn:'N',   // 랜딩페이지 보유여부
       etcImeageName: '',      //  참고이미지
       landCollection:'',      // 수집항목
       landCollectionObj:'',   // 수집항목 객체
-
-
-
-
-      apdText1: String,
-      apdText2: String,
-      apdText3: String,
     }
   },
   methods: {
@@ -659,22 +637,22 @@ export default {
     //******************************************************************************
     BanExChannelAll() { // 전체 선택 함수
       if(this.banExChannelAll == true) {
-        
         for( let i = 0 ; i < this.banExChannelObj.length ; i++) {
-          this.banExChannelObj[i].flag = false;
+        this.banExChannelObj[i].flag = false;
         }
-
+        
         this.banExChannelAll = false;
-
+        console.log("1")
       }
-      else {
+      else if(this.banExChannelAll == false){
         for( let i = 0 ; i < this.banExChannelObj.length ; i++) {
           this.banExChannelObj[i].flag = true;
           this.banChannelObj[i].flag = false;
         }
-
+        console.log("2")
         this.banExChannelAll = true;
       }
+      console.log(this.banExChannelAll)
     },
     //******************************************************************************
     // 진행(선호) 채널 개별 선택 시 처리함수
@@ -682,7 +660,7 @@ export default {
     BanExChannelOne(index) { // 개별 선택 시 전체선택 값에 대한 함수
       if(this.banExChannelObj[index].flag == true) {
         this.banExChannelObj[index].flag = false;
-        this.banExChannelAll = false;        
+        this.banExChannelAll = false;
       }
       else {
         let bFlag = true;
@@ -839,52 +817,55 @@ export default {
                                                    .map   (curValue => curValue.code)
                                                    .join  ("|");
 
-      let form = new FormData()
-      form.append("file", this.adBanner); // api file name
+      //------------------------------------------------------------------------------
+      // 정보 보내기
+      //------------------------------------------------------------------------------
+      //------------------------------------------------------------------------------
+      // 정보 보내기
+      //------------------------------------------------------------------------------
+      var data = {
+          mbId: this.$store.state.mbId
+        //, operId:  this.$store.state.emailId
+        , operId:  'aa'
+        , emailId:  '01'
+        , emailPw:  '00000'
 
-      axios.post("http://api.adinfo.co.kr:30000/manage/newcampaign", {
-        params: {
-            // Store 정보
-              mbId: this.$store.state.mbId
-            , operId: this.$store.state.operId
+        , adSrtDt: lAdSrtDt
+        , adSrtTm: this.adSrtTm
+        , adEndDt: lAdEndDt
+        , adEndTm: this.adEndTm
+        , adPurpose: this.adPurpose
+        , adTopKind: this.adTopKind
+        , adMiddleKind: this.adMiddleKind
+        , adName: this.adName
+        , adComment: this.adComment
+        , adUsp: this.adUsp
+        , adPrice: this.adPrice
+        , adPromotionPrice: this.adPromotionPrice
+        , adMinQty: this.adMinQty
+        , dayLimit: this.dayLimit
+        , approval: this.approval
+        , ageTarget: this.ageTarget
+        , ageTargetFrom: this.ageTargetFrom
+        , ageTargetTo: this.ageTargetTo
+        , reqWordCond: this.reqWordCond
+        , banChannelCond: banChannelObjLet
+        , banExChannelCond: banExChannelObjLet
+        , banImageCond: this.banImageCond
+        , banWordCond: this.banWordCond
+        , nullifyCond: this.nullifyCondObjLet
+        , cancelCond: this.cancelCondObjLet
+        , smsYn: this.smsYn
+        , smsNo: this.smsNo        
+        , autoConfirm: this.autoConfirm
+      };
 
-            // Page 정보
-            , adKind: '01'
-            , adArea: '00000'
-            , adSrtDt: lAdSrtDt
-            , adSrtTm: this.adSrtTm
-            , adEndDt: lAdEndDt
-            , adEndTm: this.adEndTm
-            , adPurpose: this.adPurpose
-            , adTopKind: this.adTopKind
-            , adMiddleKind: this.adMiddleKind
-            , adName: this.adName
-            , adBanner: ''
-            , adComment: this.adComment
-            , adUsp: this.adUsp
-            , smsYn: this.smsYn
-            , smsNo: this.smsNo
-            , adPrice: this.adPrice
-            , adPromotionPrice: this.adPromotionPrice
-            , adMinQty: this.adMinQty
-            , dayLimit: this.dayLimit
-            , approval: this.approval
-            , ageTarget: this.ageTarget
-            , ageTargetFrom: this.ageTargetFrom
-            , ageTargetTo: this.ageTargetTo
-            , reqWordCon: this.reqWordCond
-            , banChannel: banChannelObjLet
-            , banExChannel: banExChannelObjLet
-            , banImageCond: this.banImageCond
-            , banWordCond: this.banWordCond
-            , nullifyCond: this.nullifyCond
-            , cancelCond: this.cancelCond
-            , autoConfirm: this.autoConfirm
-            , file: form
-        },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const frm = new FormData();
+        frm.append("upFile", this.adBanner[0]);
+        frm.append("dataObj", new Blob([JSON.stringify(data)] , {type: "application/json"}));		
+
+      axios.post("http://api.adinfo.co.kr:30000/newcampaign", frm, {
+        headers: {'Content-Type': 'multipart/form-data'}    
       })
       .then(response => {
         console.log(response);
@@ -909,7 +890,7 @@ export default {
     adPromotionPrice : function() {
       return this.adPromotionPrice = this.adPromotionPrice.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
-          // DB 진행 수량
+          // DB 진행 수량1
     adMinQty : function() {
       return this.adMinQty = this.adMinQty.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
@@ -1012,7 +993,7 @@ export default {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 11px;
-    color: #444;
+    color: #222;
   }
 
   .chooseDate,
@@ -1031,8 +1012,8 @@ export default {
   }
   
   /* 지역 추가하기 버튼 */
-  .chooseArea>.chooseAreaDeta,
-  .chooseExcept>.chooseAreaDeta {
+  .chooseArea > .chooseAreaDeta,
+  .chooseExcept > .chooseAreaDeta {
     display: inline-block;
     padding: 6px 10px;
     border: 1px solid #e5e5e5;
@@ -1040,9 +1021,8 @@ export default {
     border-radius: 20px;
   }
 
-  .chooseArea>span>.xBtn,
-  .chooseExcept>span>.xBtn {
-
+  .chooseArea > span > .xBtn,
+  .chooseExcept > span > .xBtn {
     /* 추후에 얇은걸로 변경하기!!!!! */
     margin-left: 5px;
     transform: translateY(1px);
@@ -1103,7 +1083,6 @@ export default {
     padding: 9px 15px ;
     border: solid 1px #e5e5e5;
     border-radius: 10px;
-    margin-top: 7px;
   }
 
   .chooseDate input[type="date"] {
@@ -1120,10 +1099,6 @@ export default {
     margin-right: 2%;
   }
 
-  .chooseDate select option {
-    padding: 5px 10px;
-    border-radius: 10px;
-  }
 
   .camBox select {
     width: 100%;
@@ -1176,7 +1151,7 @@ export default {
     padding: 17px 10px 0 20px;
     vertical-align: top;
     text-align: left;
-    color: #444;
+    color: #222;
 
   }
 
@@ -1188,7 +1163,7 @@ export default {
   .container .tableBox .necItem {
     color: red;
     transform: translateY(-2px);
-    font-size: 10px;
+    font-size: 13px;
   }
 
   .container .tableBox input[type="text"] {
@@ -1246,7 +1221,7 @@ export default {
   }
 
 
-  .container .tableBox .upload_name + label >i {
+  .container .tableBox .upload_name + label > i {
     font-size: 12px;
     color: #e25b45;
     vertical-align: middle;
@@ -1258,12 +1233,7 @@ export default {
   }
 
   /* 이미지 등록하기 버튼  끝*/
-  .container .tableBox input[type="radio"] {
-    width: 10px;
-    height: 10px;
-    margin: 0 5px 0 15px;
-    transform: translateY(1px);
-  }
+
 
   .promotion table td:nth-child(2) {
     width: 530px;
@@ -1361,14 +1331,48 @@ export default {
     float: left;
   }
 
-  .container .tableBox input[type="checkbox"] {
-    margin: 0 5px;
-    transform: translateY(2px);
+  .container .tableBox input[type="checkbox"],
+  .container .tableBox input[type="radio"] {
+    display: none;
   }
 
-  .container .tableBox input[type="checkbox"] + label {
-    margin-right: 5px;
+
+
+  .container .tableBox input[type="checkbox"] + label,
+  .container .tableBox input[type="radio"] + label {
+    position: relative;
+    padding: 0 5px 0 23px;
   }
+
+  .container .tableBox input[type="checkbox"] + label:before,
+  .container .tableBox input[type="radio"] + label:before {
+    clear: both;
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border: 1px solid #cbcbcb;
+    background: #f6f6f6;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    content: "";
+    border-radius: 2px;
+  } 
+
+  .container .tableBox input[type="checkbox"]:checked + label::after,
+  .container .tableBox input[type="radio"]:checked + label:after { 
+    clear: both;
+    position: absolute;
+    display: block;
+    content: "\e91c";
+    font-family: "icomoon";
+    font-weight: 900;
+    font-size: 13px;
+    left: 6px;
+    top: 1px;
+    color: #e25b45;
+  }
+
   .container .lend {
     clear: both;
     border-top-left-radius: 0;
@@ -1450,8 +1454,7 @@ export default {
 		background: #fff;
 		color: #e25b45;
 	}
-
-
+  
   /* 지역선택 모달 팝업 */
 
 </style>

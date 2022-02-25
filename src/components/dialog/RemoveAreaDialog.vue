@@ -80,6 +80,7 @@ export default {
       , befAdAreaCityCode: ''    // 주소값 대분류 현재값
       , areaList: ''
       , removeAreaListObj: this.$store.state.removeAreaListObj
+      , addAreaListObj: this.$store.state.addAreaListObj
     }
   },
   methods: {
@@ -146,6 +147,31 @@ export default {
           return;
         }
       }
+
+      //------------------------------------------------------------------------------
+      // 제외지역 중복선택 브레이크 걸기
+      //------------------------------------------------------------------------------
+
+      for(let i = 0 ; i < this.addAreaListObj.length ; i++){
+        if(this.adAreaSubCityObj[index].subCode == this.addAreaListObj[i].subCode){
+          alert("광고지역으로 선택된 지역입니다.")
+          return;
+        }
+      }
+
+      //------------------------------------------------------------------------------
+      // 전체선택 시 나머지 지역 선택불가 걸기
+      //------------------------------------------------------------------------------
+
+      let cityAll = Number(this.adAreaSubCityObj[index].code + '000')
+      
+      for(let i = 0 ; i < this.removeAreaListObj.length ; i++ ){
+        if(this.removeAreaListObj[i].subCode == cityAll){
+          alert("전체지역 선택 시 세부지역 선택이 불가합니다.")
+         return; 
+        }
+      }
+
       
       addSubList.code = this.adAreaSubCityObj[index].code;
       addSubList.codeNm = this.adAreaSubCityObj[index].codeNm;

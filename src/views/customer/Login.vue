@@ -1,14 +1,20 @@
 <template>
   <div id="logIn">
     <div class="logInBox">
-      <h1><span>HELLO</span> AD.INFO</h1>
-      <p>통합 광고 시스템, 애드인포</p>
+      <!-- <h1><span>HELLO</span> DB.Master</h1> -->
+      <div class="logInLogo">
+        <img src="../../assets/images/loginLogo.png" alt="">
+      </div>
+      <p>정보를 정확하고 가치있게 생각하는 마케터의 성공 파트너</p>
+
+      <!-- <h1><span>마케터의 성공파트너,</span> 디비마스터</h1> -->
+      <!-- <p></p> -->
       <div class="inputBox">
         <div class="leftInput">
             <input type="text" placeholder="이메일을 입력하세요."
-            v-model="emailId">
+            v-model="clntId" @keyup.enter="GoFocus();">
             <input type="password" placeholder="비밀번호를 입력하세요"
-            v-model="emailPw">
+            v-model="clntPw" ref="clntPw" @keyup.enter="LogIn();">
         </div>
         <div class="loginBtn">
             <button
@@ -18,7 +24,7 @@
             </button>
         </div>
       </div>
-      <div class="logSerch">
+      <div class="logSearch">
         <input type="checkbox" name="stayLog" id="stayLog"><label for="stayLog"> 로그인 유지</label>
         <ul>
             <li><a href="javascript:void(0)"
@@ -27,15 +33,16 @@
             @click="SearchIdModal();">아이디 / 비밀번호 찾기</a></li>
         </ul>
       </div>
-      
       <div class="socialBox">
         <p>소셜계정 로그인</p>
+        <div class="socialBox3">
+          로그인서비스 준비중
+        </div>
         <div class="socialBox2">
-          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/NaverIcon.png" alt="네이버">네이버</a>
-          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/KakaoIcon.png" alt="카카오톡">카카오톡</a>
-          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/GoogleIcon.png" alt="구글">구글</a>
+          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/NaverIcon.png"    alt="네이버"  >네이버</a>
+          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/KakaoIcon.png"    alt="카카오톡">카카오톡</a>
+          <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/GoogleIcon.png"   alt="구글"    >구글</a>
           <a class="socialLog" href="javascript:void(0)"><img src="../../assets/images/socialIcon/FaceBookIcon.png" alt="페이스북">페이스북</a>
-          
         </div>
       </div>
     </div>
@@ -45,11 +52,10 @@
 </template>
 
 <script>
-
-import $ from 'jquery';
-import axios from "axios";
-import CreateUser from "../../components/dialog/CreateUser"
-import SearchUser from "../../components/dialog/SearchUser"
+import $          from 'jquery';
+import axios      from "axios";
+import CreateUser from "../../components/dialog/CreateUser";
+import SearchUser from "../../components/dialog/SearchUser";
 
 export default {
   components: {
@@ -58,32 +64,55 @@ export default {
   },
   data() {
     return {
-          emailId: ''
-        , emailPw: ''
+        clntId: ''
+      , clntPw: ''
     }
   },
   methods: {
+    GoFocus() {
+      this.$refs.clntPw.focus(); ///$refs
+    },
+    //******************************************************************************
+    // 로그인 함수
+    //******************************************************************************    
     LogIn() {
       axios.post("http://api.adinfo.co.kr:30000/login", {
-        emailId: this.emailId,
-        emailPw: this.emailPw
+        clntId: this.clntId,
+        clntPw: this.clntPw,
+        siteCode: '01'
       })
       .then(response => {
-        console.log(response);
-        let logStatus = response.data.status
+        if( response.data.status == "0" ) {
+          this.$store.state.clntId       = response.data.clntId
+          this.$store.state.clntNm       = response.data.clntNm
+          this.$store.state.nickNm       = response.data.nickNm
 
-        if( logStatus == "0" ) {
-          this.loginView = false;
-          this.$store.state.emailId = response.data.emailId
           this.$store.state.jwtAuthToken = response.data.authToken
-          this.$store.state.adGradeCd = response.data.gradeCd
+          this.$store.state.adGradeCd    = response.data.gradeCd
+
+          this.$store.state.mbId = response.data.mbId
+          this.$store.state.adId = response.data.adId
+          this.$store.state.mkId = response.data.mkId
+          this.$store.state.mkCd = response.data.mkCd
 
           // 토큰값을 LocalStorage에 저장한다.
-          localStorage.setItem("email", this.$store.state.emailId);
-          localStorage.setItem("token", this.$store.state.jwtAuthToken);
-          localStorage.setItem("grade", this.$store.state.adGradeCd);
+          
+          sessionStorage.setItem("clntId", this.$store.state.clntId);
+          sessionStorage.setItem("clntNm", this.$store.state.clntNm);
+          sessionStorage.setItem("nickNm", this.$store.state.nickNm);
+          sessionStorage.setItem("token" , this.$store.state.jwtAuthToken);
+          sessionStorage.setItem("grade" , this.$store.state.adGradeCd);
 
-          this.$router.push({ path : "MENU_0000" })
+          sessionStorage.setItem("mbId"  , this.$store.state.mbId);
+          sessionStorage.setItem("adId"  , this.$store.state.adId);
+          sessionStorage.setItem("mkId"  , this.$store.state.mkId);
+          sessionStorage.setItem("mkCd"  , this.$store.state.mkCd);
+
+          if( this.$store.state.adGradeCd == '05' ){
+            this.$router.push({ path : "MENU_08201" })
+          } else {
+            this.$router.push({ path : "MENU_0000" })
+          }
         } else {
           alert(response.data.message)
         }
@@ -106,13 +135,10 @@ export default {
       $("#searchModar").css({display: "block"})
     }
   }
-
 }
 </script>
 
 <style scoped>
-  /* 로그인 페이지 CSS */
-
   #logIn {
     position: fixed;
     left: 0;
@@ -137,12 +163,17 @@ export default {
     border-radius: 10px;
   }
 
-  #logIn > .logInBox > h1,
+  /* #logIn > .logInBox > h1, */
+  #logIn > .logInBox > .logInLogo,
   #logIn > .logInBox > p {
     text-align: center;
   }
 
-  #logIn .logInBox h1 {
+  #logIn > .logInBox > .logInLogo {
+    margin-bottom: 10px;
+  }
+
+  /* #logIn .logInBox h1 {
     font-size: 30px;
     color: #e25b45;
     letter-spacing: -1.05px;
@@ -152,12 +183,13 @@ export default {
   #logIn .logInBox h1 span {
     font-size: 30px;
     color: #262626;
-  }
+  } */
 
   #logIn > .logInBox > p {
     font-size: 14px;
     letter-spacing: -0.49px;
-    color: #949494;
+    font-weight: 700;
+    color: #222;
     margin-bottom: 56px;
   }
 
@@ -193,36 +225,64 @@ export default {
      font-weight: 700;
    }
 
-  #logIn .logInBox .logSerch {
+  #logIn .logInBox .logSearch {
     clear: both;
+    height: 35px;
     padding-bottom: 20px;
     border-bottom: 1px solid #000;
   }
 
-  #logIn .logInBox .logSerch input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    margin-top: -9px;
-    transform: translateY(6px);
+  #logIn .logInBox .logSearch input[type="checkbox"] {
+    display: none;
   }
 
-  #logIn .logInBox .logSerch label {
+  #logIn .logInBox .logSearch input[type="checkbox"] + label {
     color: #444;
     font-weight: 700;
-    margin: 6px;
+    padding: 6px 6px 6px 26px;
+    position: relative;
   }
 
-  #logIn .logInBox .logSerch ul {
+  #logIn .logInBox .logSearch input[type="checkbox"] + label:before {
+    clear: both;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    content: "\e91c";
+    font-family: "icomoon";
+    color: #c9c9c9;
+    font-weight: 900;
+    font-size: 15px;
+    border: 2px solid #c9c9c9;
+    border-radius: 50%;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 1px;
+    left: 0px;
+    top: 3px;
+  }
+
+    #logIn .logInBox .logSearch input[type="checkbox"]:checked + label:before {
+    color: #e25b45;
+    border: 2px solid #e25b45;
+  }
+
+  #logIn .logInBox .logSearch ul {
     float: right;
   }
 
-  #logIn .logInBox .logSerch ul li {
+  #logIn .logInBox .logSearch ul li {
     float: left;
     padding: 0 11px;
     position: relative;
   }
 
-  #logIn .logInBox .logSerch ul li:before {
+  /* #logIn .logInBox .logSearch ul li a{
+    font-weight: 800;
+    font-size: 14px;
+  } */
+
+  #logIn .logInBox .logSearch ul li:before {
     clear: both;
     content: "";
     width: 1px;
@@ -233,8 +293,12 @@ export default {
     background: #e5e5e5;
   }
 
-  #logIn .logInBox .logSerch ul li:first-child:before {
+  #logIn .logInBox .logSearch ul li:first-child:before {
     display: none;
+  }
+
+  #logIn .logInBox .socialBox {
+    position: relative;
   }
 
   #logIn .logInBox .socialBox p {
@@ -263,5 +327,17 @@ export default {
     color: #666;
   }
 
-  /* 로그인 페이지 CSS  끝 */
+  #logIn .logInBox .socialBox .socialBox3{
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    border-radius: 15.5px;
+    text-align: center;
+    font-weight: 700;
+    padding: 13px;
+    border: 1px solid #eee;
+    color: #000;
+    background: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 5px #fff;
+  }
 </style>

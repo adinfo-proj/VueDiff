@@ -8,10 +8,17 @@ export default new Vuex.Store({
     //----------------------------------------------------------------------------------
     // 접속자 정보
     //----------------------------------------------------------------------------------
-      mbId: '20000'
-    , adGradeCd: '02'                       // 회원 레벨
-    , jwtAuthToken: ''                    // 접속자가 로그인 후 수신받은 TOKEN, (로그인 유효시간)
-    , emailId: ''                         // 로그인 아이디
+      clntId: ''                               // 로그인 아이디
+    , clntNm: ''
+    , nickNm: ''
+    , mbId: 0
+    , adId: 0
+    , mkId: 0
+    , pgId: 0
+    , mkCd: ''
+
+    , adGradeCd: sessionStorage.getItem("grade")  // 회원 레벨
+    , jwtAuthToken: ''                          // 접속자가 로그인 후 수신받은 TOKEN, (로그인 유효시간)    
 
     , headerTopTitle: "데이터 센터"
     , headerMidTitle: "신규 캠페인 등록"
@@ -22,16 +29,27 @@ export default new Vuex.Store({
     , addAreaListObj: []
     , removeAreaListObj: []
 
+    //----------------------------------------------------------------------------------
+    // 랜딩페이지 제작(0802) - 이미지 추가 전역변수 
+    //----------------------------------------------------------------------------------
+    , landImg: '' // 이미지 파일
+    , landImgNm: '' // 이미지 이름 
+    , lendchooseObj: []
+    , lendchoose: ''
+
+    //----------------------------------------------------------------------------------
+    // 랜딩페이지 제작(0802) - 폼 추가 전역변수 
+    //----------------------------------------------------------------------------------
+    , inputObj: []  //
+    , secForm: null
+    , company: ''   // 회사명
   },
   getters: {
     jwtAuthValid: function() {
-      console.log("jwtAuthValid : [" + this.jwtAuthToken + "]")
       if ( (this.jwtAuthToken !== "") && (this.jwtAuthToken !== null) && (this.jwtAuthToken !== 'undefined')) {
-        console.log("jwtAuthValid is true")
         return true
       }
       else {
-        console.log("jwtAuthValid is false")
         return false
       }
     }

@@ -3,16 +3,16 @@
     <div class="searchBox">
       <h2>회원 아이디 / 비밀번호 찾기</h2>
       <div class="searchTap">
-        <a href="javascript:void(0)"
+        <span
           @click="SearchFunc(0)" v-bind:class="{on : 0 == searchSelect}"
         >
           아이디 찾기
-        </a>
-        <a href="javascript:void(0)"
+        </span>
+        <span
           @click="SearchFunc(1)" v-bind:class="{on : 1 == searchSelect}"
         >
           비밀번호 찾기
-        </a>
+        </span>
       </div>
       <div class="searchTapBox">
         <div class="searchTapSub">
@@ -20,14 +20,14 @@
             v-if="searchSelect == 0"
           >
             <div class="serachSubBox1">
-              <p>회원가입시 등록한 이름, 핸드폰 번호를 입력해주세요.<span></span></p>
+              <p>{{message}}<span>{{message1}}<br>{{message2}}</span></p>
               <table>
                 <tr>
                   <th>
                     이 름
                   </th>
                   <td>
-                    <input type="text" name="serchIdname" id="serchIdname">
+                    <input type="text" id="serchIdname" v-model="userName" ref="serchIdname">
                   </td>
                 </tr>
                 <tr>
@@ -35,27 +35,35 @@
                     핸드폰 번호
                   </th>
                   <td>
-                    <input type="text" name="serchIdPhone" id="serchIdPhone">
+                    <input type="text" id="serchIdPhone" v-model="clntSubsNo" placeholder="회원가입 시 입력한 연락처" ref="clntSubsNo">
                   </td>
                 </tr>
               </table>
             </div>
             <div class="serachSubBox2">
               <p>회원님의 아이디 찾기가 완료되었습니다.<br>
-                등록하신 아이디는 <span>qwer1234@naver.com</span>입니다.</p>
+                등록하신 아이디는 <span>{{retUeserId}}</span>입니다.</p>
             </div>
           </div>
           <div class="searchPw"
             v-if="searchSelect == 1">
             <div class="serachSubBox1">
-              <p>임시 비밀번호를 생성하여 SMS로 보내드립니다.</p>
+              <p>{{message3}}<span>{{message1}}<br>{{message2}}</span></p>
               <table>
                 <tr>
                   <th>
                     아이디
                   </th>
                   <td>
-                    <input type="text" name="serchIdname" id="serchIdname">
+                    <input type="text" id="upPassWd" ref="upPassWd" v-model="userId">
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    핸드폰번호
+                  </th>
+                  <td>
+                    <input type="text" id="upPassWdHp" v-model="pwClntSubsNo" placeholder="회원가입 시 입력한 연락처" ref="pwClntSubsNo">
                   </td>
                 </tr>
               </table>
@@ -67,7 +75,10 @@
             </div>
           </div>
         </div>
-        <button>확인</button>
+        <button class="searchCheckBtn"
+        @click="SearchUeser()">확인</button>
+        <button class="searchBtn"
+        @click="SearchIdModalCancle()">로그인 하기</button>
       </div>
       <button class="searchCancleBtn"
         @click="SearchIdModalCancle();">
@@ -80,51 +91,174 @@
 </template>
 
 <script>
-  // import axios from "axios";
+  import axios from "axios";
   import $ from 'jquery';
 
    export default {
  
     data() {
       return {
-          searchSelect: 0                      // 아이디 찾기 탭버튼
+          searchSelect : 0                      // 아이디 찾기 탭버튼
+        , userName     : ''
+        , clntSubsNo   : ''
+        , pwClntSubsNo : ''
+        , userId       : ''
+        , retUeserId   : ''
+        , message      : '회원가입시 등록한 이름, 핸드폰 번호를 입력해주세요.'
+        , message1     : ''
+        , message2     : ''
+        , message3     : '임시 비밀번호를 생성하여 SMS로 보내드립니다'
       }
     },
     methods: {
-      
+      //******************************************************************************
+      // 아이디 찾기, 임시 비밀번호 전송 함수
+      //******************************************************************************      
+      SearchUeser() {
+        //------------------------------------------------------------------------------
+        // 아이디 찾기
+        //------------------------------------------------------------------------------
+        if( this.searchSelect == 0) {
+          if(this.userName == null || this.userName == '') {
+            alert('이름 혹은 회사명을 입력해주세요');
+            this.$refs.userName.focus();
+            return;
+          }
 
- 
+          if(this.clntSubsNo == null || this.clntSubsNo == '') {
+            alert('연락처를 입력해주세요.');
+            this.$refs.clntSubsNo.focus();
+            return;
+          }
 
-    //   //******************************************************************************
-    //   // 회원가입 데이터 전송함수
-    //   //******************************************************************************
-    //   , SignPost() {
-    //     // axios.post()
+          //------------------------------------------------------------------------------
+          // 정보 보내기
+          //------------------------------------------------------------------------------
+          var data = {
+              userName   : this.userName
+            , clntSubsNo : this.clntSubsNo
+          };
 
+          const frm = new FormData();
+          frm.append("dataObj", new Blob([JSON.stringify(data)] , {type: "application/json"}));		
 
-    //     alert("회원가입이 완료되었습니다.")
-    //     $("#singPopUp").css({display: "none"})
+          axios.post("http://api.adinfo.co.kr:30000/FindUserId", frm)
+          .then(response => {
+            if( response.data.status == true ) {
+              console.log(response.data)
+              $(".searchId .serachSubBox1").css({display: "none"})
+              $(".searchId .serachSubBox2").css({display: "block"})
+              $("#searchModar .searchBox .searchTapBox .searchCheckBtn").css({display: "none"})
+              $("#searchModar .searchBox .searchTapBox .searchBtn").css({display: "inline"})
 
-    //   }
+              this.retUeserId = response.data.message;
+            //   $("#singPopUp").css({display: "none"})
+            } else {
+              this.message  = '';
+              this.message1 = "요청하신 고객정보가 존재하지 않습니다.";
+              this.message2 = "다시 입력바랍니다.";
+              return;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+        }
+        //------------------------------------------------------------------------------
+        // 임시 비밀번호 전송
+        //------------------------------------------------------------------------------
+        else {
+          if(this.userId == null || this.userId == '') {
+            alert('이름 혹은 회사명을 입력해주세요');
+            this.$refs.userId.focus();
+            return;
+          }
 
+          if(this.pwClntSubsNo == null || this.pwClntSubsNo == '') {
+            alert('연락처를 입력해주세요.');
+            this.$refs.pwClntSubsNo.focus();
+            return;
+          }
 
+          //------------------------------------------------------------------------------
+          // 정보 보내기
+          //------------------------------------------------------------------------------
+          var data1 = {
+              userId: this.userId
+            , clntSubsNo: this.pwClntSubsNo
+          };
 
+          const frm = new FormData();
+          frm.append("dataObj", new Blob([JSON.stringify(data1)] , {type: "application/json"}));		
+
+          axios.post("http://api.adinfo.co.kr:30000/UpdateUserPw", frm)
+          .then(response => {
+            if( response.data.status == true ) {
+              $(".searchPw .serachSubBox1").css({display: "none"})
+              $(".searchPw .serachSubBox2").css({display: "block"})
+              $("#searchModar .searchBox .searchTapBox .searchCheckBtn").css({display: "none"})
+              $("#searchModar .searchBox .searchTapBox .searchBtn").css({display: "inline"})
+
+              //this.retUeserId = response.data.message;
+            //   $("#singPopUp").css({display: "none"})
+            } else {
+              this.message  = '';
+              this.message1 = response.data.message;
+              this.message2 = "[1533-3757] 고객센터로 문의주세요.";
+              this.message3  = '';
+              return;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+        }
+      }
       //******************************************************************************
       // 아이디 / 비밀번호 취소 함수
       //******************************************************************************
-      SearchIdModalCancle() {
+      , SearchIdModalCancle() {
+        this.searchSelect = 0;
+        this.userName     = '';
+        this.clntSubsNo   = ''
+        this.pwClntSubsNo = ''
+        this.userId       = ''
+        this.retUeserId   = ''
+        this.message      = '회원가입시 등록한 이름, 핸드폰 번호를 입력해주세요.'
+        this.message1     = ''
+        this.message2     = ''
+        this.message3     = '임시 비밀번호를 생성하여 SMS로 보내드립니다'
+        $(".serachSubBox1").css({display: "block"})
+        $(".serachSubBox2").css({display: "none"})
+        $("#searchModar .searchBox .searchTapBox .searchCheckBtn").css({display: "inline"})
+        $("#searchModar .searchBox .searchTapBox .searchBtn").css({display: "none"})
         $("#searchModar").css({display: "none"})
       }
-
+      //******************************************************************************
+      // 아이디 / 비밀번호 탭버튼
+      //******************************************************************************
       , SearchFunc(pos) {
         this.searchSelect = pos;
-      }
+        $(".serachSubBox1").css({display: "block"})
+        $(".serachSubBox2").css({display: "none"})
 
+        this.userName   = ''
+        this.clntSubsNo = ''
+        this.pwClntSubsNo = ''
+        this.retUeserId = ''
+        this.message    = '회원가입시 등록한 이름, 핸드폰 번호를 입력해주세요.'
+        this.message1   = ''
+        this.message2   = ''
+        this.message3   = '임시 비밀번호를 생성하여 SMS로 보내드립니다'
+        $("#searchModar .searchBox .searchTapBox .searchCheckBtn").css({display: "inline"})
+        $("#searchModar .searchBox .searchTapBox .searchBtn").css({display: "none"})
+
+
+        
+      }
     }
   }
 </script>
-
-
 
 <style scoped>
   #searchModar {
@@ -178,7 +312,7 @@
     margin-bottom: 10px;
   }
 
-  #searchModar .searchBox .searchTap a {
+  #searchModar .searchBox .searchTap span {
     display: block;
     float: left;
     width: 50%;
@@ -186,16 +320,16 @@
     padding: 14px;
     text-align: center;
     border-radius: 10px;
+    cursor: pointer;
   }
 
-  #searchModar .searchBox .searchTap a.on {
+  #searchModar .searchBox .searchTap span.on {
     background: #fff;
     border: 1px solid #e25b45;
     color: #e25b45;
     font-weight: 800;
     padding: 13px;
   }
-
 
   #searchModar .searchBox .searchTapBox .searchTapSub {
     width: 100%;
@@ -215,7 +349,6 @@
     width: 70px;
   }
 
-
   #searchModar .searchBox .searchTapBox td {
     padding: 5px;
   }
@@ -224,10 +357,7 @@
     width: 100%;
     height: 31px;
     border: 1px solid #e5e5e5;
-  }
-
-  #searchModar .searchBox .searchTapBox .serachSubBox1 {
-    
+    padding: 2px 10px;
   }
 
   #searchModar .searchBox .searchTapBox .serachSubBox1 p {
@@ -237,7 +367,7 @@
     align-items: center;
   }
 
-  #searchModar .searchBox .searchTapBox .serachSubBox2 {
+  .serachSubBox2 {
     display: none;
     width: 100%;
     height: 100%;
@@ -245,20 +375,20 @@
     line-height: 1.5;
   }
 
-  #searchModar .searchBox .searchTapBox .searchPw .serachSubBox1 p {
+  /* #searchModar .searchBox .searchTapBox .searchPw .serachSubBox1 p {
     margin-top: 15px;
-  }
+  } */
 
-  #searchModar .searchBox .searchTapBox .searchPw .serachSubBox1 table{
+  /* #searchModar .searchBox .searchTapBox .searchPw .serachSubBox1 table{
     margin-top: 15px;
-  }
+  } */
 
   #searchModar .searchBox .searchTapBox span {
     color: #e25b45;
     font-weight: 700;
   }
 
-  #searchModar > .searchBox > .searchTapBox > button {
+  #searchModar .searchBox .searchTapBox button {
     width: 170px;
     height: 48px;
     border: none;
@@ -266,5 +396,9 @@
     background: #e25b45;
     color: #fff;
     font-size: 16px;
+  }
+
+  #searchModar .searchBox .searchTapBox .searchBtn {
+    display: none;
   }
 </style>
