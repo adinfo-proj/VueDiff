@@ -113,17 +113,21 @@
 								</span>
 							</p>
 							<div class="btn">
-								<button>바로 구매</button>
+								<button @click="CreatePay();">결제요청</button>
 							</div>
 						</div>
 					</div>
 					<div	class="planInfo">
 						<h6>디비마스터 상품정보</h6>
-						<img v-if="servicePlan == 'basic'" src="../../assets/images/ratePlan/basicPlan.jpg" alt="basicPlan">
-						<img v-if="servicePlan == 'silver'" src="../../assets/images/ratePlan/silverPlan.jpg" alt="silverPlan">
-						<img v-if="servicePlan == 'gold'" src="../../assets/images/ratePlan/goldPlan.jpg" alt="goldPlan">
-						<img v-if="servicePlan == 'vip'" src="../../assets/images/ratePlan/vipPlan.jpg" alt="vipPlan">
-						<img src="../../assets/images/ratePlan/common.jpg" alt="common"> 
+						<div class="planSub">
+							<img v-if="servicePlan == 'basic'" src="../../assets/images/ratePlan/basicPlan.jpg" alt="basicPlan">
+							<img v-if="servicePlan == 'silver'" src="../../assets/images/ratePlan/silverPlan.jpg" alt="silverPlan">
+							<img v-if="servicePlan == 'gold'" src="../../assets/images/ratePlan/goldPlan.jpg" alt="goldPlan">
+							<img v-if="servicePlan == 'vip'" src="../../assets/images/ratePlan/vipPlan.jpg" alt="vipPlan">
+						</div>
+						<img src="../../assets/images/ratePlan/common01.jpg" alt="common01"> 
+						<img src="../../assets/images/ratePlan/common02.jpg" alt="common02"> 
+						<img src="../../assets/images/ratePlan/common03.jpg" alt="common03"> 
 					</div>
 				</div>
 				<div v-if="tapbtn == 2" @change="ExtraPrice()">
@@ -190,7 +194,6 @@
 					</div>
 					<div	class="planInfo">
 						<h6>디비마스터 상품정보</h6>
-
 						<img v-if="subPlan == 'post'" src="../../assets/images/ratePlan/postPlan.jpg" alt="postPlan">
 						<img v-if="subPlan == 'sms'" src="../../assets/images/ratePlan/smsPlan.jpg" alt="smsPlan">
 					</div>
@@ -222,27 +225,57 @@
 </template>
 
 <script>
-
 	// import axios from "axios";
-	// import $ from 'jquery';
-
-
+	// import Inicis from "Inicis";	
+	
 	export default {
 		data() {
 			return {
-					servicePlan: ''
-				, tapbtn: 1
-				, subPlan: 'post'
-				, extraService: []
-				, total : 29700
-				, extraTotal : 0
-				, preview : ''
-				, smsPlan : 0
-				, 
+					servicePlan  : ''
+				, tapbtn       : 1
+				, subPlan      : 'post'
+				, extraService : []
+				, total        : 29700
+				, extraTotal   : 0
+				, preview      : ''
+				, smsPlan      : 0
+				, form: {
+						goodname     : '테스트'
+					, buyername    : '홍길동'
+					, buyertel     : '010-1234-5678'
+					, buyeremail   : 'test@inicis.com'
+					, price        : '1000'
+					, mid          : 'INIpayTest'
+					, gopaymethod  : 'Card'
+					, mKey         : '3a9503069192f207491d4b19bd743fc249a761ed94246c8c42fed06c3cd15a33'
+					, signature    : '9fc8b832d0ace7c1bc7827324f71d0ef742e87f991247cee52b319b8b00116ee'
+					, oid          : 'INIpayTest_1646357552574'
+					, timestamp    : '1646357552574'
+					, version      : '1.0'
+					, currency     : 'WON'
+					, acceptmethod : 'below1000'
+					, returnUrl    : 'http://localhost/stdpay/INIStdPayReturn_simple.asp'
+					, closeUrl     : 'http://localhost/stdpay/close.asp'
+				}
+				, inicis : ''
 			}
 		},
 		methods: {
 
+
+			CreatePay() {
+
+				// const frm = new FormData();
+				// frm.append(this.inicis, new Blob([JSON.stringify(this.form)] , {type: "application/json"}));
+				// this.inicis.INIStdPay.pay('SendPayForm_id');
+
+
+				window.INIStdPay.init(this.inicis);
+				window.INIStdPay.pay('SendPayForm_id');
+
+				// e.preventDefault();
+
+			},
 			Rate(pos) {
 				this.tapbtn = pos
 				if(this.tapbtn == 1) {
@@ -256,9 +289,7 @@
 				this.extraService = []
 				// this.TotalPrice();
 			},
-
 			TotalPrice() {
-
 				let price = 29700;
 				let extraPrice = 0;
 				if(this.servicePlan == 'basic'){
@@ -278,8 +309,7 @@
 				}
 
 				this.total = price +extraPrice
-				this.preview = this.total.toLocaleString('ko-KR'); 
-				
+				this.preview = this.total.toLocaleString('ko-KR'); 				
 			},
 			ExtraPrice(){
 				let price = 0;
@@ -287,12 +317,11 @@
 					price = 55000
 					this.smsPlan = 0;
 				}
-				else if(this.subPlan == 'sms'){
+				else if(this.subPlan == 'sms') {
 					price = Number(this.smsPlan)
 				}
 				this.extraTotal = price
 				this.extraPreview = this.extraTotal.toLocaleString('ko-KR');
-
 			},
 			
 			// SelectBox() {
@@ -306,8 +335,6 @@
 			TapClear() {
 				this.servicePlan = 'basic'
 			}
-
-
 		},
 		created() {
 			this.$store.state.headerTopTitle = "DBMASTER";
@@ -316,14 +343,16 @@
 			this.TapClear();
 
 			// console.log(navigator.language);
-			
-
+		},
+		mounted() {
+			// this.inicis = document.createElement('script');
+			// this.inicis.setAttribute('src', 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js');
+			// document.head.appendChild(this.inicis);
 		}
 	}
 </script>
 
 <style scoped>
-
 @font-face {
   font-family: 'S-CoreDream-6Bold';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');
@@ -619,7 +648,7 @@
 
 #menu08999 .ratePlanBottom .planInfo h6{
 	font-size: 24px;
-	line-height: 1.02;
+	line-height: 39px;
 	letter-spacing: -0.84px;
 	color: #262626;
 	text-align: center;
@@ -641,6 +670,16 @@
 }
 #menu08999 .ratePlanBottom .planInfo h6::after {
 	right: 0;
+}
+
+#menu08999 .ratePlanBottom .planInfo .planSub {
+	padding: 50px 0;
+}
+
+
+#menu08999 .ratePlanBottom .planInfo img {
+	display: block;
+	width: 100%;
 }
 
 
@@ -683,3 +722,4 @@
 }
 
 </style>
+
